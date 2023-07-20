@@ -1,7 +1,6 @@
 {
   "name": "console-figlet",
-  "version": "0.0.1",
-  "private": true,
+  "version": "0.0.0",
   "description": "",
   "homepage": "https://github.com/Wxh16144/console-figlet",
   "repository": {
@@ -19,17 +18,33 @@
     "index.js",
     "dist"
   ],
+  "keywords": [
+    "console",
+    "figlet",
+    "cli",
+    "terminal",
+    "ascii",
+    "art"
+  ],
   "scripts": {
     "build": "unbuild",
     "dev": "unbuild --stub",
     "prepublishOnly": "npm run build",
     "typecheck": "tsc --noEmit"
   },
+  "packageManager": "pnpm@8.0.0",
   "dependencies": {
+    "figlet": "^1.6.0",
     "kleur": "^4.1.5",
-    "mri": "^1.2.0"
+    "lodash.merge": "^4.6.2",
+    "lodash.pick": "^4.4.0",
+    "mri": "^1.2.0",
+    "term-size": "^3.0.2"
   },
   "devDependencies": {
+    "@types/figlet": "^1.5.6",
+    "@types/lodash.merge": "^4.6.7",
+    "@types/lodash.pick": "^4.4.7",
     "@types/node": "^18.11.19",
     "unbuild": "^1.1.1"
   },
