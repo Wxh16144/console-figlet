@@ -6,7 +6,6 @@ import mri, { Options } from "mri";
 import figlet, { Options as FigletOptions } from 'figlet'
 import merge from "lodash.merge";
 import pick from "lodash.pick";
-import font from './font';
 import { br, hr } from "./util";
 
 interface Argv extends FigletOptions {
@@ -67,13 +66,24 @@ async function main(args: Argv = argv) {
     return;
   }
 
+  const allFonts = figlet.fontsSync();
+
   if (args.fonts) {
-    return font();
+    for (const [index, font] of allFonts.entries()) {
+      globalThis.console.log(
+        c.bold(index + 1).concat(
+          c.bold(':'),
+          c.green().underline(font)
+        )
+      );
+    }
+    globalThis.console.log(hr('-', 18))
+    globalThis.console.log(c.bold(`Total: Support ${c.green(allFonts.length)}`))
+    return;
   }
 
   // ===== Core =====
   const text = args._.length ? args._.join(' ') : `${pkg.name}@${pkg.version}`;
-  if (!text) return;
 
   const validOptions = pick(args, [
     'width',
@@ -81,7 +91,7 @@ async function main(args: Argv = argv) {
     'verticalLayout',
     'whitespaceBreak',
   ]);
-  const allFonts = figlet.fontsSync();
+
   const fonts = new Set(
     args.all
       ? allFonts
@@ -91,6 +101,7 @@ async function main(args: Argv = argv) {
           : [args.font]
       ).filter(font => allFonts.includes(font))
   );
+  if (fonts.size === 0) fonts.add('Standard');
 
   for (const font of fonts) {
     const options: FigletOptions = { ...validOptions, font }
@@ -100,7 +111,8 @@ async function main(args: Argv = argv) {
     if (fonts.size > 1) {
       if (!Array.isArray(args.font)) {
         br()
-        globalThis.console.log(c.bold('Try command: ').concat(c.green(`npx ${command}@${pkg.version} "${text}" -f ${font}`)))
+        const consoleFont = font.split(' ').length > 1 ? `"${font}"` : font
+        globalThis.console.log(c.bold('Try command: ').concat(c.green(`npx ${command}@${pkg.version} ${text} -f ${consoleFont}`)));
       }
       globalThis.console.log(hr('-', Infinity));
     }
