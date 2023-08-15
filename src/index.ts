@@ -110,7 +110,7 @@ async function main(args: Argv = argv) {
     if (result) {
       if (!Array.isArray(args.font) && fonts.size > 1) {
         const consoleFont = font.split(' ').length > 1 ? `"${font}"` : font
-        globalThis.console.log(c.bold('Try command: ').concat(c.green(`${process.argv0} ${command}@${pkg.version} ${text} -f ${consoleFont}`)));
+        globalThis.console.log(c.bold('Try command: ').concat(c.green(`npx ${command}@${pkg.version} ${text} -f ${consoleFont}`)));
         br()
       } else if (fonts.size > 1) {
         globalThis.console.log(c.bold('Font: ').concat(c.green(font)));
