@@ -56,7 +56,8 @@ async function main(args: Argv = argv) {
     -${c.bold('v')}, --version: show version. ${c.green('v' + pkg.version)}
     -${c.bold('f')}, --font: A string value that indicates the FIGlet font to use. ${c.bold('@default:').concat(c.cyan('Standard'))}
     -${c.bold('w')}, --width: This option allows you to limit the width of the output.
-    ${c.bold('--fonts:')} Show all fonts.
+    ${c.bold('--all')}, View examples of all fonts
+    ${c.bold('--fonts')} List all available fonts.
     ${c.bold('--horizontalLayout:')} A string value that indicates the horizontal layout to use.
     ${c.bold('--verticalLayout:')} A string value that indicates the vertical layout to use.
     ${c.bold('--whitespaceBreak:')} This option works in conjunction with "width". 
@@ -106,15 +107,21 @@ async function main(args: Argv = argv) {
   for (const font of fonts) {
     const options: FigletOptions = { ...validOptions, font }
     const result = figlet.textSync(text, options);
-    globalThis.console.log(result);
+    if (result) {
+      if (!Array.isArray(args.font) && fonts.size > 1) {
+        const consoleFont = font.split(' ').length > 1 ? `"${font}"` : font
+        globalThis.console.log(c.bold('Try command: ').concat(c.green(`${process.argv0} ${command}@${pkg.version} ${text} -f ${consoleFont}`)));
+        br()
+      } else if (fonts.size > 1) {
+        globalThis.console.log(c.bold('Font: ').concat(c.green(font)));
+      }
+      globalThis.console.log(result);
+    } else {
+      globalThis.console.log(c.yellow(`Font ${c.bold().green(font)} is not supported, No content to display!`));
+    }
 
     if (fonts.size > 1) {
-      if (!Array.isArray(args.font)) {
-        br()
-        const consoleFont = font.split(' ').length > 1 ? `"${font}"` : font
-        globalThis.console.log(c.bold('Try command: ').concat(c.green(`npx ${command}@${pkg.version} ${text} -f ${consoleFont}`)));
-      }
-      globalThis.console.log(hr('-', Infinity));
+      globalThis.console.log(hr('.', Infinity));
     }
   }
 }
